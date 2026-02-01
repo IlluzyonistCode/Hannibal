@@ -1,0 +1,15 @@
+{
+  "name": "hannibal",
+  "version": "1.0.0",
+  "private": true,
+  "main": "client/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "license": "MIT",
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "electron": "^39.2.1",
+    "marked": "^17.0.1"
+  }
+}
