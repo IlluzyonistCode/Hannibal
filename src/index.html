@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://openrouter.ai https://fonts.googleapis.com https://fonts.gstatic.com;">
+    <title>Hannibal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+    <nav class="top-nav">
+        <div class="nav-brand elegant-serif">HANNIBAL</div>
+        <div class="nav-links">
+            <button class="nav-btn" data-view="menu">HOME</button>
+            <button class="nav-btn" data-view="trainer">RHETORIC</button>
+            <button class="nav-btn" data-view="profiler">PROFILER</button>
+            <button class="nav-btn" data-view="lexicon">LEXICON</button>
+        </div>
+        <button class="settings-btn" id="settings-open-btn" title="Settings">⚙</button>
+    </nav>
+    <div id="api-banner" class="api-banner hidden">
+        ⚠ API key missing or invalid. Configure in Settings.
+    </div>
+    <div class="app-container">
+        <section id="view-menu" class="view active-view">
+            <div class="menu-content">
+                <h1 class="elegant-serif big-title">HANNIBAL</h1>
+                <p class="subtitle">Cognitive Palace &amp; Forensic Suite</p>
+                <div class="menu-cards">
+                    <div class="card" data-goto="trainer">
+                        <div class="card-icon">🧠</div>
+                        <h2>Rhetoric Trainer</h2>
+                        <p>Paraphrase, debate, and forge metaphors under pressure.</p>
+                    </div>
+                    <div class="card" data-goto="profiler">
+                        <div class="card-icon">👁️</div>
+                        <h2>Forensic Profiler</h2>
+                        <p>Dissect correspondence. Expose hidden motives.</p>
+                    </div>
+                    <div class="card" data-goto="lexicon">
+                        <div class="card-icon">📖</div>
+                        <h2>Lexicon</h2>
+                        <p>Archive of refined constructs and chosen words.</p>
+                    </div>
+                </div>
+                <div id="menu-status" class="menu-status"></div>
+            </div>
+        </section>
+        <section id="view-trainer" class="view hidden">
+            <div class="trainer-layout">
+                <aside class="sidebar trainer-sidebar">
+                    <h2 class="elegant-serif sidebar-title">Method</h2>
+                    <div class="mode-group">
+                        <button class="mode-btn active" data-mode="paraphrase">Linguistic Scalpel</button>
+                        <button class="mode-btn" data-mode="debate">Rhetoric Sparring</button>
+                        <button class="mode-btn" data-mode="metaphor">Metaphor Lab</button>
+                    </div>
+                    <div id="metaphor-submodes" class="sub-mode-group hidden">
+                        <button class="sub-btn active" data-sub="random">Random Item</button>
+                        <button class="sub-btn" data-sub="sphere">Sphere Challenge</button>
+                        <button class="sub-btn" data-sub="evolution">Evolution</button>
+                    </div>
+                    <div class="trainer-info">
+                        <p id="mode-description" class="mode-desc">Transform mundane thoughts into elegant constructs.</p>
+                    </div>
+                </aside>
+                <main class="trainer-main">
+                    <div id="panel-paraphrase" class="mode-panel active-panel">
+                        <div class="chat-history" id="chat-paraphrase"></div>
+                        <div class="input-area">
+                            <textarea id="input-paraphrase" placeholder="Enter your phrase…" rows="2"></textarea>
+                            <button class="send-btn" id="send-paraphrase">➤</button>
+                        </div>
+                    </div>
+                    <div id="panel-debate" class="mode-panel hidden">
+                        <div class="chat-history" id="chat-debate"></div>
+                        <div class="input-area">
+                            <button class="gen-btn" id="btn-new-situation">New Situation</button>
+                            <textarea id="input-debate" placeholder="Your response to the situation…" rows="2"></textarea>
+                            <button class="send-btn" id="send-debate">Submit</button>
+                        </div>
+                    </div>
+                    <div id="panel-metaphor" class="mode-panel hidden">
+                        <div id="sub-random" class="sub-panel active-sub">
+                            <div class="metaphor-header">
+                                <div class="timer-display" id="timer-random">0:30</div>
+                                <button class="gen-btn" id="btn-gen-item">Generate Item</button>
+                            </div>
+                            <div id="item-display" class="item-display"></div>
+                            <div class="chat-history" id="chat-random"></div>
+                            <div class="input-area">
+                                <textarea id="input-random" placeholder="Your metaphor…" rows="2"></textarea>
+                                <button class="send-btn" id="send-random">Submit</button>
+                            </div>
+                        </div>
+                        <div id="sub-sphere" class="sub-panel hidden">
+                            <div class="metaphor-header">
+                                <div class="timer-display" id="timer-sphere">2:00</div>
+                                <button class="gen-btn" id="btn-gen-sphere">Generate Sphere &amp; Terms</button>
+                            </div>
+                            <div id="sphere-display" class="item-display"></div>
+                            <div id="sphere-inputs" class="sphere-inputs hidden"></div>
+                            <div class="chat-history" id="chat-sphere"></div>
+                            <div class="input-area" id="sphere-submit-area" style="display:none">
+                                <button class="gen-btn" id="send-sphere">Submit All Metaphors</button>
+                            </div>
+                        </div>
+                        <div id="sub-evolution" class="sub-panel hidden">
+                            <div class="metaphor-header">
+                                <button class="gen-btn" id="btn-suggest-cliche">Suggest Cliché</button>
+                            </div>
+                            <div class="input-area" id="evo-start-area">
+                                <textarea id="input-evo-start" placeholder="Type a cliché metaphor or click Suggest…" rows="2"></textarea>
+                                <button class="send-btn" id="btn-evo-begin">Begin</button>
+                            </div>
+                            <div class="chat-history" id="chat-evolution"></div>
+                            <div class="input-area hidden" id="evo-round-area">
+                                <textarea id="input-evo-round" placeholder="Your replacement…" rows="2"></textarea>
+                                <button class="send-btn" id="btn-evo-submit">Replace</button>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </section>
+        <section id="view-profiler" class="view hidden">
+            <div class="profiler-layout">
+                <aside class="sidebar">
+                    <h2 class="elegant-serif sidebar-title">Evidence</h2>
+                    <div id="upload-zone" class="upload-zone">
+                        <div class="upload-icon">📂</div>
+                        <p>Drop chat log here</p>
+                        <p class="muted">.txt &nbsp;/&nbsp; .json</p>
+                        <input type="file" id="file-input" accept=".txt,.json" style="display:none">
+                    </div>
+                    <div id="profiler-status" class="status-message">Awaiting evidence.</div>
+                    <div id="profiler-metrics" class="metrics-container hidden"></div>
+                    <button class="gen-btn" id="btn-cancel-profiler" style="display:none">Cancel</button>
+                </aside>
+                <main class="main-content">
+                    <div id="profiler-progress" class="profiler-progress hidden">
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill"></div>
+                        </div>
+                        <span id="progress-label">Analyzing chunk 0 / 0…</span>
+                    </div>
+                    <div id="report-tabs" class="tabs-container hidden"></div>
+                    <div id="report-content" class="report-content">
+                        <p class="empty-hint">No active case.<br>Upload a chat log to begin forensic analysis.</p>
+                    </div>
+                </main>
+            </div>
+        </section>
+        <section id="view-lexicon" class="view hidden">
+            <div class="lexicon-layout">
+                <div class="lexicon-toolbar">
+                    <h2 class="elegant-serif" style="margin:0">The Mind Palace</h2>
+                    <div class="lex-controls">
+                        <input class="lex-search" id="lex-search" placeholder="Search…">
+                        <select class="lex-filter" id="lex-lang-filter">
+                            <option value="all">All languages</option>
+                        </select>
+                        <button class="gen-btn" id="lex-add-btn">+ Add Entry</button>
+                        <button class="gen-btn" id="lex-export-btn">Export</button>
+                        <button class="gen-btn" id="lex-import-btn">Import</button>
+                    </div>
+                </div>
+                <div id="lex-grid" class="vocab-grid"></div>
+            </div>
+        </section>
+    </div>
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2 class="elegant-serif">Settings</h2>
+                <button class="modal-close" id="settings-close-btn">✕</button>
+            </div>
+            <div class="modal-body">
+                <label class="setting-label">OpenRouter API Key</label>
+                <div class="key-row">
+                    <input type="password" id="api-key-input" class="setting-input" placeholder="sk-or-…">
+                    <button class="gen-btn" id="btn-test-key">Test Connection</button>
+                </div>
+                <div id="key-status" class="key-status"></div>
+                <label class="setting-label">Model</label>
+                <select id="model-select" class="setting-input">
+                    <option value="openai/gpt-4o">openai / gpt-4o</option>
+                    <option value="openai/gpt-4o-mini">openai / gpt-4o-mini</option>
+                    <option value="openai/gpt-3.5-turbo">openai / gpt-3.5-turbo</option>
+                    <option value="anthropic/claude-sonnet-4-5">anthropic / claude-sonnet-4-5</option>
+                    <option value="anthropic/claude-3-haiku">anthropic / claude-3-haiku</option>
+                    <option value="mistralai/mixtral-8x7b-instruct">mistralai / mixtral-8x7b</option>
+                    <option value="qwen/qwen-2.5-72b-instruct">qwen / qwen-2.5-72b-instruct</option>
+                    <option value="google/gemini-pro">google / gemini-pro</option>
+                    <option value="meta-llama/llama-3-70b-instruct">meta-llama / llama-3-70b</option>
+                    <option value="openrouter/auto">openrouter / auto</option>
+                </select>
+                <label class="setting-label">
+                    Temperature &nbsp;
+                    <span id="temp-val" class="accent-text">0.8</span>
+                </label>
+                <input type="range" id="temp-slider" class="setting-range" min="0.1" max="1.0" step="0.05" value="0.8">
+                <label class="setting-label">Conversation Language</label>
+                <select id="lang-select" class="setting-input">
+                    <option value="Russian">Russian</option>
+                    <option value="English">English</option>
+                    <option value="German">German</option>
+                    <option value="Turkish">Turkish</option>
+                    <option value="French">French</option>
+                    <option value="Spanish">Spanish</option>
+                    <option value="Italian">Italian</option>
+                    <option value="Polish">Polish</option>
+                    <option value="Ukrainian">Ukrainian</option>
+                    <option value="Belarusian">Belarusian</option>
+                    <option value="Kazakh">Kazakh</option>
+                    <option value="Chinese (Simplified)">Chinese (Simplified)</option>
+                    <option value="Arabic">Arabic</option>
+                </select>
+                <label class="setting-label setting-checkbox-label">
+                    <input type="checkbox" id="store-checkbox" checked>
+                    &nbsp; Store conversation history locally
+                </label>
+                <div class="setting-danger">
+                    <button class="danger-btn" id="btn-clear-all">Clear All History &amp; Lexicon</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="add-entry-modal" class="modal-overlay hidden">
+        <div class="modal-box modal-sm">
+            <div class="modal-header">
+                <h2 class="elegant-serif">Add Entry</h2>
+                <button class="modal-close" id="add-entry-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <label class="setting-label">Type</label>
+                <select id="ae-type" class="setting-input">
+                    <option value="phrase">PHRASE</option>
+                    <option value="word">WORD</option>
+                </select>
+                <label class="setting-label">Content</label>
+                <textarea id="ae-content" class="setting-input" rows="3" style="resize:vertical"></textarea>
+                <label class="setting-label">Definition / Analysis</label>
+                <textarea id="ae-definition" class="setting-input" rows="3" style="resize:vertical"></textarea>
+                <label class="setting-label">Language</label>
+                <select id="ae-lang" class="setting-input">
+                    <option>Russian</option>
+                    <option>English</option>
+                    <option>German</option>
+                    <option>French</option>
+                    <option>Spanish</option>
+                    <option>Italian</option>
+                    <option>Polish</option>
+                    <option>Turkish</option>
+                    <option>Ukrainian</option>
+                    <option>Chinese (Simplified)</option>
+                    <option>Arabic</option>
+                </select>
+                <button class="gen-btn" id="ae-save-btn" style="margin-top:15px; width:100%">Save to Lexicon</button>
+            </div>
+        </div>
+    </div>
+    <div id="toast" class="toast hidden"></div>
+    <script src="renderer.js"></script>
+</body>
+
+</html>
